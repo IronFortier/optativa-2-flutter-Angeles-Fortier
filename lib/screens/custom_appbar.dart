@@ -11,7 +11,11 @@ const CustomAppbar({super.key, required this.title});
       shadowColor: const Color.fromARGB(255, 16, 199, 40),
       foregroundColor: Colors.white,
       
-      titleTextStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      titleTextStyle: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Colors.white, // Asegura que el texto sea blanco
+      ),
       title: Text(title, textAlign: TextAlign.center),
       backgroundColor: Colors.blue,
       centerTitle: true,

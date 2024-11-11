@@ -1,5 +1,6 @@
 import 'package:examen_unidad_2/modules/login/domain/dto/category_dto.dart';
 import 'package:examen_unidad_2/modules/login/domain/repository/category_rep.dart';
+import 'package:examen_unidad_2/screens/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:examen_unidad_2/router/routers.dart';
 
@@ -24,9 +25,7 @@ class _CategoriesViewState extends State<CategoriesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Categorías'),
-      ),
+      appBar: CustomAppbar(title: "Categorías"),
       body: FutureBuilder<List<CategoryDto>>(
         future: categoriesFuture,
         builder: (context, snapshot) {
@@ -38,19 +37,29 @@ class _CategoriesViewState extends State<CategoriesView> {
             return Center(child: Text('No hay categorías disponibles'));
           } else {
             return ListView.builder(
-              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final category = snapshot.data![index];
-                return ListTile(
-                  leading: Icon(Icons.category),
-                  title: Text(category.name),
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      Routers.productDetail,
-                      arguments: category.slug,
-                    );
-                  },
+                final isEven = index % 2 == 0;
+                return Container(
+                  color: isEven ? Colors.grey.shade200 : Colors.white,
+                  child: ListTile(
+                    leading: Icon(
+                      isEven ? Icons.shopping_bag : Icons.fastfood,
+                      color: isEven ? Colors.blue : Colors.red,
+                    ),
+                    title: Text(category.name),
+                    trailing: Icon(
+                      Icons.chevron_right, // Icono de ">"
+                      color: isEven ? Colors.blue : Colors.red,
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        Routers.productDetail,
+                        arguments: category.slug,
+                      );
+                    },
+                  ),
                 );
               },
             );

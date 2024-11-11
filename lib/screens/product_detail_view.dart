@@ -1,3 +1,4 @@
+import 'package:examen_unidad_2/screens/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:examen_unidad_2/modules/login/domain/dto/product_dto.dart';
 
@@ -9,9 +10,7 @@ class ProductDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Detalle de producto'),
-      ),
+      appBar: CustomAppbar(title: "Detalles"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

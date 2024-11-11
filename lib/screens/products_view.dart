@@ -1,5 +1,7 @@
+
 import 'package:examen_unidad_2/modules/login/domain/dto/product_dto.dart';
 import 'package:examen_unidad_2/modules/login/domain/repository/product_rep.dart';
+import 'package:examen_unidad_2/screens/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'product_detail_view.dart';
 
@@ -25,9 +27,7 @@ class _ProductsViewState extends State<ProductsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Products'),
-      ),
+      appBar:CustomAppbar(title: "Prouctos"),
       body: FutureBuilder<List<ProductDto>>(
         future: productsFuture,
         builder: (context, snapshot) {
@@ -48,36 +48,42 @@ class _ProductsViewState extends State<ProductsView> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final product = snapshot.data![index];
-                return Card(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Image.network(
-                          product.imageUrl,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailView(product: product),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Image.network(
+                            product.imageUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(product.title, style: TextStyle(fontWeight: FontWeight.bold)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProductDetailView(product: product),
-                              ),
-                            );
-                          },
-                          child: Text('Detalles', style: TextStyle(color: Colors.blue)),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            product.title,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            'Detalles',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
