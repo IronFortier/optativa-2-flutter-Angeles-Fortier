@@ -1,4 +1,3 @@
-
 import 'package:examen_unidad_2/modules/login/domain/dto/product_dto.dart';
 import 'package:examen_unidad_2/modules/login/domain/repository/product_rep.dart';
 import 'package:examen_unidad_2/screens/custom_appbar.dart';
@@ -27,7 +26,7 @@ class _ProductsViewState extends State<ProductsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:CustomAppbar(title: "Prouctos"),
+      appBar: CustomAppbar(title: "Productos"),
       body: FutureBuilder<List<ProductDto>>(
         future: productsFuture,
         builder: (context, snapshot) {
@@ -57,32 +56,46 @@ class _ProductsViewState extends State<ProductsView> {
                       ),
                     );
                   },
-                  child: Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Image.network(
-                            product.imageUrl,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
+                  child: SizedBox(
+                    height: 200, // Altura fija de 200 para cada tarjeta
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 150, // Imagen ocupa 3/4 de la tarjeta
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
+                              child: Image.network(
+                                product.imageUrl,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                              ),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            product.title,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              product.title,
+                              textAlign: TextAlign.center, // Centra el nombre del producto
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            'Detalles',
-                            style: TextStyle(color: Colors.blue),
+                          Center(
+                            child: Text(
+                              'Detalles',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

@@ -10,7 +10,7 @@ class ProductDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppbar(title: "Detalles"),
+      appBar: CustomAppbar(title: "Detalle de producto"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -31,9 +31,12 @@ class ProductDetailView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
-            Text(
-              product.description,
-              textAlign: TextAlign.center,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.8, // Reduce el ancho de la descripción
+              child: Text(
+                product.description,
+                textAlign: TextAlign.center,
+              ),
             ),
             const SizedBox(height: 20),
             Row(
@@ -41,21 +44,33 @@ class ProductDetailView extends StatelessWidget {
               children: [
                 Text(
                   'Precio: \$${product.price}',
-                  style: const TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 16), // Misma tipografía que la descripción
                 ),
                 Text(
                   'Stock: ${product.stock}',
-                  style: const TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 16), // Misma tipografía que la descripción
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: () {
-                // Acción para agregar al carrito
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Agregar'),
+            SizedBox(
+              height: 40,
+              width: 120,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // Acción para agregar al carrito
+                },
+                icon: const Icon(Icons.add, size: 16),
+                label: const Text('Agregar'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5), // Borde radius de 5
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 10), // Altura ajustada
+                  textStyle: TextStyle(fontSize: 16),
+                ),
+              ),
             ),
           ],
         ),
