@@ -1,3 +1,4 @@
+import 'package:examen_unidad_2/router/routers.dart';
 import 'package:examen_unidad_2/screens/custom_appbar.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +12,9 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _passwordController = TextEditingController();
 
   void _login() {
-    if (_usernameController.text == '1234' && _passwordController.text == '1234') {
-      Navigator.pushReplacementNamed(context, '/categories');
+    if (_usernameController.text == 'iron' && _passwordController.text == '1234') {
+      Navigator.pushReplacementNamed(context, Routers.categories);
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Credenciales incorrectas')),
@@ -29,7 +31,21 @@ class _LoginViewState extends State<LoginView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.network('https://via.placeholder.com/150'), // Reemplaza con la imagen deseada
+            Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.blue.shade100,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      'assets/login_image.png', // Replace with your image path
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
             TextField(
               controller: _usernameController,
               decoration: InputDecoration(labelText: 'Usuario'),
@@ -37,7 +53,6 @@ class _LoginViewState extends State<LoginView> {
             TextField(
               controller: _passwordController,
               decoration: InputDecoration(labelText: 'Contraseña'),
-              obscureText: true,
             ),
             SizedBox(height: 20),
             ElevatedButton(
