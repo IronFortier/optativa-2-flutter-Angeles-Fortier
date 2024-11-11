@@ -1,16 +1,16 @@
-import 'package:examen_unidad_2/modules/login/domain/dto/product_dto.dart';
 import 'package:flutter/material.dart';
+import 'package:examen_unidad_2/modules/login/domain/dto/product_dto.dart';
 
 class ProductDetailView extends StatelessWidget {
   final ProductDto product;
 
-  ProductDetailView({required this.product});
+  const ProductDetailView({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalle de product'),
+        title: const Text('Detalle de producto'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -22,31 +22,41 @@ class ProductDetailView extends StatelessWidget {
               height: 200,
               fit: BoxFit.cover,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               product.title,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               product.description,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text('Precio: \$${product.price}', style: TextStyle(fontSize: 18)),
-                Text('Stock: ${product.stock}', style: TextStyle(fontSize: 18)),
+                Text(
+                  'Precio: \$${product.price}',
+                  style: const TextStyle(fontSize: 18),
+                ),
+                Text(
+                  'Stock: ${product.stock}',
+                  style: const TextStyle(fontSize: 18),
+                ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () {
-                // Acción para agregar al carrito (implementar según necesidades)
+                // Acción para agregar al carrito
               },
-              icon: Icon(Icons.add),
-              label: Text('Agregar'),
+              icon: const Icon(Icons.add),
+              label: const Text('Agregar'),
             ),
           ],
         ),

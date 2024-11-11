@@ -1,24 +1,39 @@
+import 'package:examen_unidad_2/infraestructure/connection/api_crud.dart';
+import 'package:examen_unidad_2/modules/login/domain/repository/category_rep.dart';
+import 'package:examen_unidad_2/modules/login/domain/repository/product_rep.dart';
 import 'package:flutter/material.dart';
 import 'router/list_routers.dart';
 import 'router/routers.dart';
 
 void main() {
-  runApp(MainApp());
+  final apiCrudService = ApiCrud(baseUrl: 'https://dummyjson.com');
+
+  runApp(MyApp(
+    categoryRepository: CategoryRepository(apiCrudService: apiCrudService),
+    productRepository: ProductRepository(apiCrudService: apiCrudService),
+  ));
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  final CategoryRepository categoryRepository;
+  final ProductRepository productRepository;
+
+  const MyApp({
+    required this.categoryRepository,
+    required this.productRepository,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData.dark().copyWith(
-        appBarTheme: const AppBarTheme(
+        appBarTheme: AppBarTheme(
           backgroundColor: Colors.red,
         ),
       ),
-      initialRoute: Routers.login, // 
+      initialRoute: Routers.login,
       routes: ListRouters.listScreens,
     );
   }

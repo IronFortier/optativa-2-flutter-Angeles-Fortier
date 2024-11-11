@@ -15,13 +15,12 @@ class ProductDto {
     required this.stock,
   });
 
-  // Método para mapear desde JSON
   factory ProductDto.fromJson(Map<String, dynamic> json) {
     return ProductDto(
       id: json['id'] as int,
       title: json['title'] as String,
       description: json['description'] as String,
-      imageUrl: json['thumbnail'] as String,  // Usa 'thumbnail' para la imagen
+      imageUrl: json['thumbnail'] as String, // Verifica que sea el campo correcto para la imagen
       price: (json['price'] as num).toDouble(),
       stock: json['stock'] as int,
     );

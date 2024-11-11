@@ -1,12 +1,13 @@
-import 'package:examen_unidad_2/infraestructure/connection/api.dart';
 import 'package:examen_unidad_2/modules/login/domain/dto/product_dto.dart';
+import 'package:examen_unidad_2/modules/login/domain/repository/product_rep.dart';
 import 'package:flutter/material.dart';
 import 'product_detail_view.dart';
 
 class ProductsView extends StatefulWidget {
   final String categorySlug;
+  final ProductRepository productRepository;
 
-  ProductsView({required this.categorySlug});
+  ProductsView({required this.categorySlug, required this.productRepository});
 
   @override
   _ProductsViewState createState() => _ProductsViewState();
@@ -18,7 +19,7 @@ class _ProductsViewState extends State<ProductsView> {
   @override
   void initState() {
     super.initState();
-    productsFuture = ApiService().fetchProductsByCategory(widget.categorySlug);
+    productsFuture = widget.productRepository.getProductsByCategory(widget.categorySlug);
   }
 
   @override

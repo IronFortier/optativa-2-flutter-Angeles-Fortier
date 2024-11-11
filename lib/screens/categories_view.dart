@@ -1,9 +1,13 @@
-import 'package:examen_unidad_2/infraestructure/connection/api.dart';
-import 'package:examen_unidad_2/modules/login/domain/dto/categories_dto.dart';
-import 'package:examen_unidad_2/screens/products_view.dart';
+import 'package:examen_unidad_2/modules/login/domain/dto/category_dto.dart';
+import 'package:examen_unidad_2/modules/login/domain/repository/category_rep.dart';
 import 'package:flutter/material.dart';
+import 'package:examen_unidad_2/router/routers.dart';
 
 class CategoriesView extends StatefulWidget {
+  final CategoryRepository categoryRepository;
+
+  CategoriesView({required this.categoryRepository});
+
   @override
   _CategoriesViewState createState() => _CategoriesViewState();
 }
@@ -14,7 +18,7 @@ class _CategoriesViewState extends State<CategoriesView> {
   @override
   void initState() {
     super.initState();
-    categoriesFuture = ApiService().fetchCategories();
+    categoriesFuture = widget.categoryRepository.getCategories();
   }
 
   @override
@@ -40,15 +44,11 @@ class _CategoriesViewState extends State<CategoriesView> {
                 return ListTile(
                   leading: Icon(Icons.category),
                   title: Text(category.name),
-                  subtitle: Text(category.slug),
-                  trailing: Icon(Icons.arrow_forward),
                   onTap: () {
-                    // Navegación a ProductsView con el slug de la categoría
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => ProductsView(categorySlug: category.slug),
-                      ),
+                      Routers.productDetail,
+                      arguments: category.slug,
                     );
                   },
                 );

@@ -14,7 +14,6 @@ class _LoginViewState extends State<LoginView> {
   void _login() {
     if (_usernameController.text == 'iron' && _passwordController.text == '1234') {
       Navigator.pushReplacementNamed(context, Routers.categories);
-
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Credenciales incorrectas')),
@@ -32,20 +31,20 @@ class _LoginViewState extends State<LoginView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.blue.shade100,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      'assets/login_image.png', // Replace with your image path
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.blue.shade100,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  'assets/login_image.png',
+                  fit: BoxFit.cover,
                 ),
+              ),
+            ),
             TextField(
               controller: _usernameController,
               decoration: InputDecoration(labelText: 'Usuario'),
@@ -53,6 +52,7 @@ class _LoginViewState extends State<LoginView> {
             TextField(
               controller: _passwordController,
               decoration: InputDecoration(labelText: 'Contraseña'),
+              obscureText: true,
             ),
             SizedBox(height: 20),
             ElevatedButton(
