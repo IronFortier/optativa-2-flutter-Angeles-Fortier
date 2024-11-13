@@ -1,21 +1,28 @@
+import 'package:examen_unidad_2/Widgets/product_details/Quantity_input.dart';
+import 'package:examen_unidad_2/Widgets/product_details/product_description.dart';
+import 'package:examen_unidad_2/Widgets/product_details/product_image.dart';
+import 'package:examen_unidad_2/Widgets/product_details/product_price.dart';
+import 'package:examen_unidad_2/Widgets/product_details/product_title.dart';
+import 'package:examen_unidad_2/Widgets/general/custom_button.dart';
+import 'package:examen_unidad_2/modules/product_details/useCase/product_details_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:examen_unidad_2/modules/products/domain/dto/product_dto.dart';
-
 import 'package:examen_unidad_2/Widgets/general/custom_appbar.dart';
 
-class ProductDetailView extends StatefulWidget {
+class ProductDetailView extends StatelessWidget {
   final ProductDto product;
 
-  const ProductDetailView({Key? key, required this.product}) : super(key: key);
+  ProductDetailView({Key? key, required this.product}) : super(key: key);
 
-  @override
-  _ProductDetailViewState createState() => _ProductDetailViewState();
-}
+  final TextEditingController quantityController = TextEditingController();
 
-class _ProductDetailViewState extends State<ProductDetailView> {
-  final TextEditingController _quantityController = TextEditingController();
+  final ProductDetailsUsecase UCprod = ProductDetailsUsecase();
 
-  
+  void _showMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,63 +32,23 @@ class _ProductDetailViewState extends State<ProductDetailView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.network(
-              widget.product.imageUrl,
-              height: 200,
-              fit: BoxFit.cover,
-            ),
+            ProductImage(imageUrl: product.imageUrl),
             const SizedBox(height: 20),
-            Text(
-              widget.product.title,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            ProductTitle(title: product.title),
             const SizedBox(height: 10),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: Text(
-                widget.product.description,
-                textAlign: TextAlign.center,
-              ),
-            ),
+            ProductDescription(description: product.description),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  'Precio: \$${widget.product.price}',
-                  style: const TextStyle(fontSize: 16),
-                ),
-                Text(
-                  'Stock: ${widget.product.stock}',
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
+            ProductPriceAndStock(price: product.price, stock: product.stock),
             const SizedBox(height: 20),
-            TextField(
-              controller: _quantityController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Cantidad',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
-            ),
+            QuantityInput(controller: quantityController),
             const SizedBox(height: 20),
-         
-            SizedBox(
-              height: 40,
-              width: 120,
-              // child: ElevatedButton.icon(
-              //   onPressed: _handleAddToCart, // Aquí llamamos al método
-              //   icon: const Icon(Icons.add, size: 16),
-              //   label: const Text('Agregar'),
-              // ),
+            CustomButton(
+              label: 'Agregar al carrito',
+              icon: Icons.add_shopping_cart,
+              Action: () {
+                final quantity = int.tryParse(quantityController.text) ?? 0;
+                UCprod.addToCart(product, quantity, context);
+              },
             ),
           ],
         ),

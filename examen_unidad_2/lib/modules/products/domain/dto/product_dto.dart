@@ -25,4 +25,17 @@ class ProductDto {
       stock: json['stock'] as int,
     );
   }
+
+   // Convierte ProductDto a un mapa
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'thumbnail': imageUrl,
+      'price': price,
+      'stock': stock,
+    };
+  }
+  
 }

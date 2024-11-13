@@ -1,3 +1,4 @@
+import 'package:examen_unidad_2/router/routers.dart';
 import 'package:flutter/material.dart';
 // import 'package:examen_unidad_2/screens/cart_view.dart'; // Importa la vista del carrito
 
@@ -25,19 +26,16 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title, textAlign: TextAlign.center),
       backgroundColor: Colors.blue,
       centerTitle: true,
-      // actions: showCartIcon
-      //     ? [
-      //         IconButton(
-      //           icon: Icon(Icons.shopping_cart),
-      //           onPressed: () {
-      //             Navigator.push(
-      //               context,
-      //               MaterialPageRoute(builder: (context) => CartView()), // Navega a CartView
-      //             );
-      //           },
-      //         ),
-      //       ]
-      //     : [], // Si showCartIcon es false, no muestra ningún icono en actions
+      actions: showCartIcon
+          ? [
+              IconButton(
+                icon: Icon(Icons.shopping_cart),
+                onPressed: () {
+                  Navigator.pushNamed(context, Routers.cart);
+                },
+              ),
+            ]
+          : [], // Si showCartIcon es false, no muestra ningún icono en actions
     );
   }
 
