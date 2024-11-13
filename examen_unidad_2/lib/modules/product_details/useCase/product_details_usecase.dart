@@ -6,6 +6,25 @@ import 'package:flutter/material.dart';
 class ProductDetailsUsecase {
   final CartRepository cartRepository = CartRepository();
 
+  // Método para verificar si el carrito tiene 7 productos distintos
+  Future<bool> isCartFull() async {
+    List<CartDto> cart = await cartRepository.getCart();
+    return cart.length >= 7;
+  }
+
+  // Método para verificar si la cantidad de un producto en el carrito es igual o superior al stock disponible
+Future<bool> isQuantityEqualOrExceedingStock(ProductDto product) async {
+  List<CartDto> cart = await cartRepository.getCart();
+
+  int existingProductIndex = cart.indexWhere((item) => item.product.id == product.id);
+
+  if (existingProductIndex != -1) {
+    int currentQuantity = cart[existingProductIndex].quantity;
+    return currentQuantity >= product.stock;
+  }
+  return false;
+}
+
   Future<void> addToCart(ProductDto product, int quantity, BuildContext context) async {
     // Obtener el carrito actual
     List<CartDto> cart = await cartRepository.getCart();
