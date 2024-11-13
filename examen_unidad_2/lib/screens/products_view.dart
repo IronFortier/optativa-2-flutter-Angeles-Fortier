@@ -1,42 +1,43 @@
-import 'package:examen_unidad_2/modules/products/domain/dto/product_dto.dart';
-import 'package:examen_unidad_2/modules/products/domain/repository/product_rep.dart';
 import 'package:examen_unidad_2/Widgets/general/custom_appbar.dart';
+import 'package:examen_unidad_2/modules/products/useCase/products_usecase.dart';
 import 'package:flutter/material.dart';
 import 'product_detail_view.dart';
 
-class ProductsView extends StatefulWidget {
-  final String categorySlug;
-  final ProductRepository productRepository;
+class ProductsView extends StatelessWidget {
+  final ProductsUsecase UCproducts;
+  final String category;
 
-  ProductsView({required this.categorySlug, required this.productRepository});
-
-  @override
-  _ProductsViewState createState() => _ProductsViewState();
-}
-
-class _ProductsViewState extends State<ProductsView> {
-  late Future<List<ProductDto>> productsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    productsFuture = widget.productRepository.getProductsByCategory(widget.categorySlug);
-  }
+  ProductsView({Key? key, required this.UCproducts, required this.category})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return Scaffold(
-      appBar: CustomAppbar(title: "Productos"),
-      body: FutureBuilder<List<ProductDto>>(
-        future: productsFuture,
+      appBar: CustomAppbar(title: "Productos $category"),
+      body: FutureBuilder(
+        future: UCproducts.GetRepository(category),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            // Comprobamos si el error es por la falta de autenticación
+            if (snapshot.error
+                .toString()
+                .contains("No se encontró el token de autenticación")) {
+              // Si no está autenticado, redirigimos a la pantalla de login
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pushReplacementNamed(context, '/login');
+              });
+              return const Center(child: Text("Redirigiendo al login"));
+            }
+
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No products available'));
-          } else {
+          }
+
+          if (snapshot.hasData) {
             return GridView.builder(
               padding: EdgeInsets.all(10),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -52,7 +53,8 @@ class _ProductsViewState extends State<ProductsView> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductDetailView(product: product),
+                        builder: (context) =>
+                            ProductDetailView(product: product),
                       ),
                     );
                   },
@@ -68,7 +70,8 @@ class _ProductsViewState extends State<ProductsView> {
                           SizedBox(
                             height: 150, // Imagen ocupa 3/4 de la tarjeta
                             child: ClipRRect(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(5)),
                               child: Image.network(
                                 product.imageUrl,
                                 fit: BoxFit.cover,
@@ -80,7 +83,8 @@ class _ProductsViewState extends State<ProductsView> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               product.title,
-                              textAlign: TextAlign.center, // Centra el nombre del producto
+                              textAlign: TextAlign
+                                  .center, // Centra el nombre del producto
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -102,6 +106,8 @@ class _ProductsViewState extends State<ProductsView> {
               },
             );
           }
+
+          return Center(child: Text("No hay productos disponibles"));
         },
       ),
     );

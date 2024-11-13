@@ -1,6 +1,6 @@
 import 'package:examen_unidad_2/Widgets/general/custom_button.dart';
-import 'package:examen_unidad_2/Widgets/login.dart/inputs.dart';
-import 'package:examen_unidad_2/Widgets/login.dart/login_image.dart';
+import 'package:examen_unidad_2/Widgets/login/inputs.dart';
+import 'package:examen_unidad_2/Widgets/login/login_image.dart';
 import 'package:examen_unidad_2/modules/login/domain/dto/acces_credential.dart';
 import 'package:examen_unidad_2/modules/login/useCase/login_usecase.dart';
 import 'package:examen_unidad_2/router/routers.dart';
@@ -17,21 +17,11 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _passwordController = TextEditingController();
   final UClogin = LoginUseCase();
 
-  void _login() {
-    if (_usernameController.text == 'iron' &&
-        _passwordController.text == '1234') {
-      Navigator.pushReplacementNamed(context, Routers.categories);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Credenciales incorrectas')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppbar(title: "Login"),
+      appBar: const CustomAppbar(title: "Login", showCartIcon: false),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32.0),
         child: Column(
@@ -47,14 +37,10 @@ class _LoginViewState extends State<LoginView> {
               try {
                 await UClogin.execute(AccesCredentials(User: _usernameController.text, Password: _passwordController.text));
                 //  await CleanHistory ** por hacer
-                Navigator.push(
+                Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => CategoryScreen(
-                    getCategoriesUseCase: GetCategoriesUseCase(CategoryRepository(AuthService())),
-                  ),
-                ),
-              );
+                Routers.categories
+                );
               }
               catch (error) {
               // Muestra un error si falla la autenticación
