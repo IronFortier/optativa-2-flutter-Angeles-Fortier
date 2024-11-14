@@ -31,7 +31,7 @@ class ProductGridItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 150, // Imagen ocupa 3/4 de la tarjeta
+                height: 150, 
                 child: ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
                   child: Image.network(

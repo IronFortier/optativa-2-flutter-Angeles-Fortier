@@ -1,42 +1,26 @@
 import 'package:examen_unidad_2/Widgets/general/custom_appbar.dart';
+import 'package:examen_unidad_2/Widgets/general/custom_button.dart';
 import 'package:examen_unidad_2/modules/cart/domain/dto/cart_dto.dart';
 import 'package:examen_unidad_2/modules/cart/useCase/cart_usecase.dart';
 import 'package:flutter/material.dart';
+import 'package:examen_unidad_2/router/routers.dart';
 
-class CartView extends StatefulWidget {
+class CartView extends StatelessWidget {
   final CartUsecase cartUsecase;
 
   CartView({Key? key, required this.cartUsecase}) : super(key: key);
 
-  @override
-  _CartViewState createState() => _CartViewState();
-}
-
-class _CartViewState extends State<CartView> {
-  late Future<List<CartDto>> _cartItemsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadCart();  // Cargar el carrito cuando se inicia el estado
-  }
-
-  // Método para cargar el carrito
-  void _loadCart() {
-    _cartItemsFuture = widget.cartUsecase.getCart();
-  }
-
-  // Método para calcular el total
   double _calculateTotal(List<CartDto> cartItems) {
-    return cartItems.fold(0, (sum, item) => sum + (item.product.price * item.quantity));
+    return cartItems.fold(
+        0, (sum, item) => sum + (item.product.price * item.quantity));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppbar(title: "Carrito"),
-      body: FutureBuilder<List<CartDto>>(
-        future: _cartItemsFuture,
+      body: FutureBuilder(
+        future: cartUsecase.getCart(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -52,7 +36,6 @@ class _CartViewState extends State<CartView> {
 
             return Column(
               children: [
-                // Mostrar el total en la AppBar
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
@@ -66,7 +49,8 @@ class _CartViewState extends State<CartView> {
                     itemBuilder: (context, index) {
                       final item = cartItems[index];
                       return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
                         child: ListTile(
                           leading: Image.network(
                             item.product.imageUrl,
@@ -80,7 +64,8 @@ class _CartViewState extends State<CartView> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.remove_red_eye, color: Colors.blue),
+                                icon: Icon(Icons.remove_red_eye,
+                                    color: Colors.blue),
                                 onPressed: () {
                                   Navigator.pushNamed(
                                     context,
@@ -92,13 +77,14 @@ class _CartViewState extends State<CartView> {
                               IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),
                                 onPressed: () async {
-                                  await widget.cartUsecase.removeProduct(item.product.id);
+                                  await cartUsecase
+                                      .removeProduct(item.product.id);
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text("Producto eliminado del carrito")),
+                                    SnackBar(
+                                        content: Text(
+                                            "Producto eliminado del carrito")),
                                   );
-                                  // Refrescar la vista
-                                  _loadCart(); // Volver a cargar los datos
-                                  setState(() {});
+                                  (context as Element).reassemble();
                                 },
                               ),
                             ],
@@ -107,6 +93,25 @@ class _CartViewState extends State<CartView> {
                       );
                     },
                   ),
+                ),
+                Divider(),
+                CustomButton(
+                  label: 'Comprar',
+                  icon: Icons.shopping_bag,
+                  Action: () async {
+                    try {
+                      await cartUsecase.guardarCarrito();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Compra realizada con éxito")),
+                      );
+                      // Navegar a la pantalla de "Compras realizadas"
+                      Navigator.pushNamed(context, Routers.finalpurchase);
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(e.toString())),
+                      );
+                    }
+                  },
                 ),
               ],
             );

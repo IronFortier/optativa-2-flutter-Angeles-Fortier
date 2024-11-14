@@ -21,7 +21,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppbar(title: "Login", showCartIcon: false),
+      appBar: const CustomAppbar(title: "Login", showCartIcon: false,showPurchIcon: false,),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32.0),
         child: Column(
@@ -36,7 +36,7 @@ class _LoginViewState extends State<LoginView> {
             CustomButton(label: 'Ingresar', Action: () async{
               try {
                 await UClogin.execute(AccesCredentials(User: _usernameController.text, Password: _passwordController.text));
-                //  await CleanHistory ** por hacer
+                
                 Navigator.pushNamed(
                 context,
                 Routers.categories

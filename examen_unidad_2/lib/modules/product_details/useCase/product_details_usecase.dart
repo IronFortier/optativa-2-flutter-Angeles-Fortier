@@ -12,6 +12,11 @@ class ProductDetailsUsecase {
     return cart.length >= 7;
   }
 
+Future<bool> shouldShowAddToCartButton(ProductDto product) async {
+    bool isFull = await isCartFull();
+    bool isOutOfStock = await isQuantityEqualOrExceedingStock(product);
+    return !(isFull || isOutOfStock);
+  }
   // Método para verificar si la cantidad de un producto en el carrito es igual o superior al stock disponible
 Future<bool> isQuantityEqualOrExceedingStock(ProductDto product) async {
   List<CartDto> cart = await cartRepository.getCart();

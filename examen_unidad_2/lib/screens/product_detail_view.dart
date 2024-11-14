@@ -1,10 +1,10 @@
 import 'package:examen_unidad_2/Widgets/product_details/Quantity_input.dart';
 import 'package:examen_unidad_2/Widgets/product_details/conditional.dart';
+import 'package:examen_unidad_2/Widgets/product_details/conditionalbuton.dart';
 import 'package:examen_unidad_2/Widgets/product_details/product_description.dart';
 import 'package:examen_unidad_2/Widgets/product_details/product_image.dart';
 import 'package:examen_unidad_2/Widgets/product_details/product_price.dart';
 import 'package:examen_unidad_2/Widgets/product_details/product_title.dart';
-import 'package:examen_unidad_2/Widgets/general/custom_button.dart';
 import 'package:examen_unidad_2/modules/product_details/useCase/product_details_usecase.dart';
 import 'package:examen_unidad_2/router/routers.dart';
 import 'package:flutter/material.dart';
@@ -66,16 +66,13 @@ class ProductDetailView extends StatelessWidget {
               },
             ),
 
-            // Botón "Agregar al carrito" solo si las condiciones anteriores son falsas
-            if (!(UCprod.isCartFull() == true || UCprod.isQuantityEqualOrExceedingStock(product) == true))
-              CustomButton(
-                label: 'Agregar al carrito',
-                icon: Icons.add_shopping_cart,
-                Action: () {
-                  final quantity = int.tryParse(quantityController.text) ?? 0;
-                  UCprod.addToCart(product, quantity, context);
-                },
-              ),
+            
+              // Utilizar el widget ConditionalButton
+            ConditionalButton(
+              product: product,
+              usecase: UCprod,
+              quantityController: quantityController,
+            ),
 
           ],
         ),

@@ -8,6 +8,7 @@ import 'package:examen_unidad_2/modules/products/domain/repository/product_repps
 import 'package:examen_unidad_2/modules/products/useCase/products_usecase.dart';
 import 'package:examen_unidad_2/screens/cart_view.dart';
 import 'package:examen_unidad_2/screens/categories_view.dart';
+import 'package:examen_unidad_2/screens/final_purchase.dart';
 import 'package:examen_unidad_2/screens/login_view.dart';
 import 'package:examen_unidad_2/screens/product_detail_view.dart';
 import 'package:examen_unidad_2/screens/products_view.dart';
@@ -30,9 +31,9 @@ class ListRouters {
       );
     },
 
+    Routers.finalpurchase: (context) => PurchasesView(),
 
     Routers.productDetail: (context) {
-      // Extraemos los argumentos enviados al navegar a esta ruta
       final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       final product = arguments['product'] as ProductDto;
 

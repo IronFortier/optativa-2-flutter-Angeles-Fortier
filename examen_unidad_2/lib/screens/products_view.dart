@@ -12,7 +12,7 @@ class ProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    
     return Scaffold(
       appBar: CustomAppbar(title: "Productos $category"),
       body: FutureBuilder(
@@ -23,7 +23,7 @@ class ProductsView extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            // Comprobamos si el error es por la falta de autenticación
+          
             if (snapshot.error
                 .toString()
                 .contains("No se encontró el token de autenticación")) {
@@ -59,7 +59,7 @@ class ProductsView extends StatelessWidget {
                     );
                   },
                   child: SizedBox(
-                    height: 200, // Altura fija de 200 para cada tarjeta
+                    height: 200,
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
@@ -68,7 +68,7 @@ class ProductsView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
-                            height: 150, // Imagen ocupa 3/4 de la tarjeta
+                            height: 150, 
                             child: ClipRRect(
                               borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(5)),
@@ -84,7 +84,7 @@ class ProductsView extends StatelessWidget {
                             child: Text(
                               product.title,
                               textAlign: TextAlign
-                                  .center, // Centra el nombre del producto
+                                  .center, 
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
