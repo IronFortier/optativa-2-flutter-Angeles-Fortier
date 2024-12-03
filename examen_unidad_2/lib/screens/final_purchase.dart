@@ -12,7 +12,7 @@ class PurchasesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Compras Realizadas")),
+      // appBar: AppBar(title: Text("Compras Realizadas")),
       body: FutureBuilder<List<OrderDto>>(
         future: purchaseUsecase.getOrders(),
         builder: (context, snapshot) {

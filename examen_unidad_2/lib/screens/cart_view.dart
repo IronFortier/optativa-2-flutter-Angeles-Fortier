@@ -18,7 +18,7 @@ class CartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppbar(title: "Carrito"),
+      // appBar: CustomAppbar(title: "Carrito"),
       body: FutureBuilder(
         future: cartUsecase.getCart(),
         builder: (context, snapshot) {

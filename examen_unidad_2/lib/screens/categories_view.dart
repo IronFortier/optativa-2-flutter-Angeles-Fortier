@@ -12,7 +12,7 @@ class CategoriesView extends StatelessWidget {
   Widget build(BuildContext context) {
     print("se abre la pantalla");
     return Scaffold(
-      appBar: const CustomAppbar(title: "Categorias"),
+      // appBar: const CustomAppbar(title: "Categorias"),
       body: FutureBuilder(
         future: UCcategory.GetRepository(),
         builder: (context, snapshot) {
@@ -62,6 +62,7 @@ class CategoriesView extends StatelessWidget {
 
           return Center(child: Text("No hay categorías disponibles"));
         },
+        
       ),
     );
   }
