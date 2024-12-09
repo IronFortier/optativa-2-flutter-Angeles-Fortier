@@ -20,18 +20,19 @@ class ProductDto {
   });
 
   factory ProductDto.fromJson(Map<String, dynamic> json) {
-    return ProductDto(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      imageUrl: json['thumbnail'] as String,
-      price: (json['price'] as num).toDouble(),
-      stock: json['stock'] as int,
-      reviews: (json['reviews'] as List<dynamic>)
-          .map((review) => ReviewDto.fromJson(review))
-          .toList(), // Mapeo de la lista de reviews
-    );
-  }
+  return ProductDto(
+    id: json['id'] as int,
+    title: json['title'] as String,
+    description: json['description'] as String? ?? '', // Si puede ser null, usa un valor predeterminado
+    imageUrl: json['thumbnail'] as String? ?? '',      // Evita errores con valores nulos
+    price: (json['price'] as num?)?.toDouble() ?? 0.0, // Maneja números nulos
+    stock: json['stock'] as int? ?? 0,                // Valores predeterminados si es null
+    reviews: (json['reviews'] as List<dynamic>?)
+            ?.map((review) => ReviewDto.fromJson(review))
+            .toList() ?? [],                          // Lista vacía si no hay reseñas
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {

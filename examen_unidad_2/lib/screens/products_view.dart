@@ -60,13 +60,7 @@ class ProductsView extends StatelessWidget {
                     );
                     UCproducts.saveSeen(product);
 
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         ProductDetailView(product: product),
-                    //   ),
-                    // );
+          
                   },
                   child: SizedBox(
                     height: 200,

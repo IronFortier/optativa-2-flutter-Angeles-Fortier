@@ -7,6 +7,8 @@ import 'package:examen_unidad_2/modules/lastseen/usecase/lastseen_usecase.dart';
 import 'package:examen_unidad_2/modules/products/domain/dto/product_dto.dart';
 import 'package:examen_unidad_2/modules/products/domain/repository/product_reppsitory.dart';
 import 'package:examen_unidad_2/modules/products/useCase/products_usecase.dart';
+import 'package:examen_unidad_2/modules/search/domain/repository/search_repository.dart';
+import 'package:examen_unidad_2/modules/search/usecase/search_usecase.dart';
 import 'package:examen_unidad_2/screens/cart_view.dart';
 import 'package:examen_unidad_2/screens/categories_view.dart';
 import 'package:examen_unidad_2/screens/final_purchase.dart';
@@ -41,7 +43,7 @@ class ListRouters {
     Routers.finalpurchase: (context) => NavigationExample(child: PurchasesView()),
 
 
-    Routers.finder: (context) => NavigationExample(child: FinderView()),
+    Routers.finder: (context) => NavigationExample(child: FinderView(searchUseCase: SearchUseCase(SearchRepository()))),
 
 
     Routers.lastseen: (context) => NavigationExample(child: LastSeenView(UClastseen: LastseenUsecase(ProductRepository(auth: Auth())))),

@@ -1,10 +1,12 @@
-import 'dart:convert';
+import 'package:examen_unidad_2/modules/products/domain/dto/product_dto.dart';
+import 'package:examen_unidad_2/modules/search/usecase/search_usecase.dart';
 import 'package:examen_unidad_2/router/routers.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class FinderView extends StatefulWidget {
-  const FinderView({Key? key}) : super(key: key);
+  final SearchUseCase searchUseCase;
+
+  const FinderView({Key? key, required this.searchUseCase}) : super(key: key);
 
   @override
   State<FinderView> createState() => _FinderViewState();
@@ -12,7 +14,7 @@ class FinderView extends StatefulWidget {
 
 class _FinderViewState extends State<FinderView> {
   final TextEditingController _searchController = TextEditingController();
-  List<dynamic> _products = [];
+  List<ProductDto> _products = [];
   bool _isLoading = false;
   String _errorMessage = '';
 
@@ -23,19 +25,10 @@ class _FinderViewState extends State<FinderView> {
     });
 
     try {
-      final response = await http
-          .get(Uri.parse('https://dummyjson.com/products/search?q=$query'));
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          _products = data['products'];
-        });
-      } else {
-        setState(() {
-          _errorMessage = 'Error: ${response.reasonPhrase}';
-        });
-      }
+      final products = await widget.searchUseCase.searchProducts(query);
+      setState(() {
+        _products = products;
+      });
     } catch (e) {
       setState(() {
         _errorMessage = 'Error: $e';
@@ -66,6 +59,7 @@ class _FinderViewState extends State<FinderView> {
                   onPressed: () {
                     final query = _searchController.text.trim();
                     if (query.isNotEmpty) {
+                      FocusScope.of(context).unfocus(); // Cierra el teclado
                       _searchProducts(query);
                     }
                   },
@@ -73,25 +67,29 @@ class _FinderViewState extends State<FinderView> {
               ),
             ),
             const SizedBox(height: 16),
-            if (_isLoading) const Center(child: CircularProgressIndicator()),
-            if (_errorMessage.isNotEmpty)
+            if (_isLoading)
+              const Center(child: CircularProgressIndicator())
+            else if (_errorMessage.isNotEmpty)
               Center(
                 child: Text(
                   _errorMessage,
                   style: const TextStyle(color: Colors.red),
                 ),
-              ),
-            if (!_isLoading && _errorMessage.isEmpty && _products.isNotEmpty)
+              )
+            else if (_products.isEmpty)
+              const Center(child: Text('No se encontraron productos.'))
+            else
               Expanded(
                 child: ListView.builder(
                   itemCount: _products.length,
                   itemBuilder: (context, index) {
                     final product = _products[index];
                     return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      margin:
+                          const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: ListTile(
                         leading: Image.network(
-                          product['thumbnail'] ?? '',
+                          product.imageUrl,
                           width: 50,
                           height: 50,
                           fit: BoxFit.cover,
@@ -99,31 +97,23 @@ class _FinderViewState extends State<FinderView> {
                             return const Icon(Icons.error);
                           },
                         ),
-                        title: Text(product['title'] ?? 'Sin título'),
-                        subtitle: Text(
-                          product['description'] ?? 'Sin descripción',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        trailing: Text('\$${product['price']}'),
+                        title: Text(product.title),
+                        subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
                         onTap: () {
                           Navigator.pushNamed(
                             context,
-                            Routers
-                                .productDetail, // Asegúrate de usar `Routers.productDetail`
+                            Routers.productDetail,
                             arguments: {
-                              'product':
-                                  product, // Incluye el objeto como parte del mapa
+                              'product': product,
                             },
                           );
+                          widget.searchUseCase.saveSeen(product);
                         },
                       ),
                     );
                   },
                 ),
               ),
-            if (!_isLoading && _products.isEmpty && _errorMessage.isEmpty)
-              const Center(child: Text('No se encontraron productos')),
           ],
         ),
       ),
