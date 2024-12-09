@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:examen_unidad_2/router/routers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -72,8 +73,7 @@ class _FinderViewState extends State<FinderView> {
               ),
             ),
             const SizedBox(height: 16),
-            if (_isLoading)
-              const Center(child: CircularProgressIndicator()),
+            if (_isLoading) const Center(child: CircularProgressIndicator()),
             if (_errorMessage.isNotEmpty)
               Center(
                 child: Text(
@@ -107,7 +107,15 @@ class _FinderViewState extends State<FinderView> {
                         ),
                         trailing: Text('\$${product['price']}'),
                         onTap: () {
-                          // Aquí puedes navegar a la vista de detalles si es necesario
+                          Navigator.pushNamed(
+                            context,
+                            Routers
+                                .productDetail, // Asegúrate de usar `Routers.productDetail`
+                            arguments: {
+                              'product':
+                                  product, // Incluye el objeto como parte del mapa
+                            },
+                          );
                         },
                       ),
                     );

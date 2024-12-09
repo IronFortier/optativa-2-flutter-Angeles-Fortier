@@ -3,6 +3,7 @@ import 'package:examen_unidad_2/modules/cart/domain/repository/cart_repository.d
 import 'package:examen_unidad_2/modules/cart/useCase/cart_usecase.dart';
 import 'package:examen_unidad_2/modules/categories/domain/repository/category_repository.dart';
 import 'package:examen_unidad_2/modules/categories/useCase/category_usecase.dart';
+import 'package:examen_unidad_2/modules/lastseen/usecase/lastseen_usecase.dart';
 import 'package:examen_unidad_2/modules/products/domain/dto/product_dto.dart';
 import 'package:examen_unidad_2/modules/products/domain/repository/product_reppsitory.dart';
 import 'package:examen_unidad_2/modules/products/useCase/products_usecase.dart';
@@ -43,7 +44,7 @@ class ListRouters {
     Routers.finder: (context) => NavigationExample(child: FinderView()),
 
 
-    Routers.lastseen: (context) => NavigationExample(child: LastSeenView()),
+    Routers.lastseen: (context) => NavigationExample(child: LastSeenView(UClastseen: LastseenUsecase(ProductRepository(auth: Auth())))),
 
     // Routers.productDetail: (context) {
     //   final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;

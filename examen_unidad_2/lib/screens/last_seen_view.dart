@@ -1,105 +1,65 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:examen_unidad_2/modules/lastseen/domain/dto/seen_dto.dart';
+import 'package:examen_unidad_2/modules/lastseen/usecase/lastseen_usecase.dart';
 import 'package:examen_unidad_2/modules/products/domain/dto/product_dto.dart';
 import 'package:examen_unidad_2/router/routers.dart';
-import 'package:examen_unidad_2/Widgets/general/custom_button.dart';
+import 'package:flutter/material.dart';
 
-class LastSeenView extends StatefulWidget {
-  @override
-  _LastSeenViewState createState() => _LastSeenViewState();
-}
+class LastSeenView extends StatelessWidget {
+  final LastseenUsecase UClastseen;
 
-class _LastSeenViewState extends State<LastSeenView> {
-  List<Map<String, dynamic>> _seenProducts = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSeenProducts();
-  }
-
-  // Cargar los productos vistos desde localStorage
-  Future<void> _loadSeenProducts() async {
-    final prefs = await SharedPreferences.getInstance();
-    final seenProductsJson = prefs.getString('seenProducts') ?? '[]';
-    final seenProducts = List<Map<String, dynamic>>.from(jsonDecode(seenProductsJson));
-
-    setState(() {
-      _seenProducts = seenProducts;
-    });
-  }
-
-  // Incrementar el contador de vistas de un producto
-  Future<void> _incrementViewCount(int productId) async {
-    final prefs = await SharedPreferences.getInstance();
-    final seenProductsJson = prefs.getString('seenProducts') ?? '[]';
-    final seenProducts = List<Map<String, dynamic>>.from(jsonDecode(seenProductsJson));
-
-    for (var product in seenProducts) {
-      if (product['id'] == productId) {
-        product['viewCount'] += 1;
-      }
-    }
-
-    await prefs.setString('seenProducts', jsonEncode(seenProducts));
-    _loadSeenProducts();
-  }
-
-  // Agregar al carrito (dummy acción)
-  void _addToCart(ProductDto product) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${product.title} agregado al carrito')),
-    );
-  }
+  LastSeenView({Key? key, required this.UClastseen}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      body: _seenProducts.isEmpty
-          ? const Center(child: Text('No has visto ningún producto'))
-          : ListView.builder(
-              itemCount: _seenProducts.length,
-              itemBuilder: (context, index) {
-                final product = _seenProducts[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: ListTile(
-                    leading: Image.network(
-                      product['imageUrl'],
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-                    ),
-                    title: Text(product['title']),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Precio: \$${product['price']}'),
-                        Text('Visto: ${product['viewCount']} veces'),
-                      ],
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.add_shopping_cart),
-                      onPressed: () {
-                        final dto = ProductDto(
-                          id: product['id'],
-                          title: product['title'],
-                          description: product['description'],
-                          imageUrl: product['imageUrl'],
-                          price: product['price'],
-                          stock: product['stock'],
-                          reviews: product['reviews']
-                        );
-                        _addToCart(dto);
-                      },
-                    ),
+      appBar: AppBar(
+        title: const Text('Last Seen Products'),
+      ),
+      body: FutureBuilder<List<ProductDto>>(
+        future: UClastseen.getSeen(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error al cargar los productos vistos.'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No has visto productos aún.'));
+          }
+
+          final seenProducts = snapshot.data!;
+
+          return ListView.builder(
+            itemCount: seenProducts.length,
+            itemBuilder: (context, index) {
+              final product = seenProducts[index]; // Acceso al ProductDto
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: ListTile(
+                  leading: Image.network(
+                    product.imageUrl,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
                   ),
-                );
-              },
-            ),
+                  title: Text(product.title),
+                  subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      Routers
+                          .productDetail, // Asegúrate de usar `Routers.productDetail`
+                      arguments: {
+                        'product':
+                            product, // Incluye el objeto como parte del mapa
+                      },
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

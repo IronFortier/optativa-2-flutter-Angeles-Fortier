@@ -58,6 +58,7 @@ class ProductsView extends StatelessWidget {
                             product, // Incluye el objeto como parte del mapa
                       },
                     );
+                    UCproducts.saveSeen(product);
 
                     // Navigator.push(
                     //   context,
