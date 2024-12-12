@@ -5,4 +5,7 @@ class Routers {
   static const products = "/products";
   static const finalpurchase = "/finalpurchase"; 
   static const cart = "/cart";
+  static const navigator = "/navbar";
+  static const finder = "/finder";
+  static const lastseen = "/lastseen";
 }

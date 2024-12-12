@@ -1,5 +1,6 @@
 import 'package:examen_unidad_2/Widgets/general/custom_appbar.dart';
 import 'package:examen_unidad_2/modules/products/useCase/products_usecase.dart';
+import 'package:examen_unidad_2/router/routers.dart';
 import 'package:flutter/material.dart';
 import 'product_detail_view.dart';
 
@@ -12,9 +13,8 @@ class ProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      appBar: CustomAppbar(title: "Productos $category"),
+      // appBar: CustomAppbar(title: "Productos $category"),
       body: FutureBuilder(
         future: UCproducts.GetRepository(category),
         builder: (context, snapshot) {
@@ -23,7 +23,6 @@ class ProductsView extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-          
             if (snapshot.error
                 .toString()
                 .contains("No se encontró el token de autenticación")) {
@@ -50,13 +49,18 @@ class ProductsView extends StatelessWidget {
                 final product = snapshot.data![index];
                 return InkWell(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ProductDetailView(product: product),
-                      ),
+                      Routers
+                          .productDetail, // Asegúrate de usar `Routers.productDetail`
+                      arguments: {
+                        'product':
+                            product, // Incluye el objeto como parte del mapa
+                      },
                     );
+                    UCproducts.saveSeen(product);
+
+          
                   },
                   child: SizedBox(
                     height: 200,
@@ -68,7 +72,7 @@ class ProductsView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
-                            height: 150, 
+                            height: 150,
                             child: ClipRRect(
                               borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(5)),
@@ -83,8 +87,7 @@ class ProductsView extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               product.title,
-                              textAlign: TextAlign
-                                  .center, 
+                              textAlign: TextAlign.center,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
